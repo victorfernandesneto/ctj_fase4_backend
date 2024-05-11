@@ -3,14 +3,6 @@ const { client } = require("./dbService.js");
 // Adicionar Espaço
 async function addSpace(spaceName, capacity) {
     try {
-        // Verificar se o nome do espaço já existe
-        const existingSpaceQuery = 'SELECT * FROM espacos WHERE nome_do_espaco = $1';
-        const existingSpaceResult = await client.query(existingSpaceQuery, [spaceName]);
-        if (existingSpaceResult.rows.length > 0) {
-            console.error('Já existe um espaço com esse nome.');
-            return; // Retorna sem adicionar o espaço se o nome já existir
-        }
-
         const query = `
             INSERT INTO espacos (nome_do_espaco, capacidade)
             VALUES ($1, $2)
