@@ -1,10 +1,8 @@
-const { connectDatabase, disconnectDatabase, client } = require("./dbConnection.js");
+const { client } = require("./dbService.js");
 
 // Adicionar Espaço
 async function addSpace(spaceName, capacity) {
     try {
-        await connectDatabase();
-
         // Verificar se o nome do espaço já existe
         const existingSpaceQuery = 'SELECT * FROM espacos WHERE nome_do_espaco = $1';
         const existingSpaceResult = await client.query(existingSpaceQuery, [spaceName]);
@@ -24,16 +22,12 @@ async function addSpace(spaceName, capacity) {
     } catch (error) {
         console.error('Erro ao adicionar o espaço:', error);
         throw error;
-    } finally {
-        await disconnectDatabase();
     }
 }
 
 // Consultar todos os espaços
 async function getAllSpaces() {
     try {
-        await connectDatabase();
-
         const query = 'SELECT * FROM espacos';
         const result = await client.query(query);
 
@@ -41,16 +35,12 @@ async function getAllSpaces() {
     } catch (error) {
         console.error('Erro ao obter todos os espaços:', error);
         throw error;
-    } finally {
-        await disconnectDatabase();
     }
 }
 
 // Consultar Espaço por ID
 async function getSpaceById(spaceId) {
     try {
-        await connectDatabase();
-
         const query = 'SELECT * FROM espacos WHERE id = $1';
         const values = [spaceId];
         const result = await client.query(query, values);
@@ -59,16 +49,12 @@ async function getSpaceById(spaceId) {
     } catch (error) {
         console.error('Erro ao obter espaço por ID:', error);
         throw error;
-    } finally {
-        await disconnectDatabase();
     }
 }
 
 // Editar Espaço
 async function updateSpace(spaceId, spaceName, capacity) {
     try {
-        await connectDatabase();
-
         const query = `
             UPDATE espacos
             SET nome_do_espaco = $1, capacidade = $2
@@ -81,16 +67,12 @@ async function updateSpace(spaceId, spaceName, capacity) {
     } catch (error) {
         console.error('Erro ao atualizar o espaço:', error);
         throw error;
-    } finally {
-        await disconnectDatabase();
     }
 }
 
 // Deletar Espaço
 async function deleteSpace(spaceId) {
     try {
-        await connectDatabase();
-
         const query = 'DELETE FROM espacos WHERE id = $1';
         const values = [spaceId];
         await client.query(query, values);
@@ -99,8 +81,6 @@ async function deleteSpace(spaceId) {
     } catch (error) {
         console.error('Erro ao deletar o espaço:', error);
         throw error;
-    } finally {
-        await disconnectDatabase();
     }
 }
 
