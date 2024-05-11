@@ -1,5 +1,5 @@
 // reservaService.js
-const { connectDatabase, disconnectDatabase, client } = require("../dbConnection.js");
+const { client } = require("./dbService.js");
 
 // Função para verificar se a duração da reserva está dentro do intervalo desejado (entre 1 e 8 horas)
 function checkReservationDuration(newReservation) {
@@ -52,8 +52,6 @@ async function checkReservationOverlap(newReservation) {
 // Função para inserir uma nova reserva
 async function insertReservation(newReservation) {
   try {
-    await connectDatabase();
-
     const duration = await checkReservationDuration(newReservation); // Devolve se a reserva tem duração desejada
     if (!duration) {
       console.log('Não é possível cadastrar a reserva devido à duração da reserva.')
@@ -76,34 +74,25 @@ async function insertReservation(newReservation) {
     console.log('Reserva cadastrada com sucesso!');
   } catch (error) {
     console.error('Erro ao cadastrar a reserva:', error);
-  } finally {
-    await disconnectDatabase();
   }
 }
 
 // Função que devolve todas as ocorrências do banco de dados
 async function getAllReservations() {
   try {
-    await connectDatabase();
-
     const query = 'SELECT * FROM reservas';
     const result = await client.query(query);
 
-    console.log(result.rows);
     return result.rows;
   } catch (error) {
     console.error('Erro ao obter todas as reservas:', error);
     throw error;
-  } finally {
-    await disconnectDatabase();
   }
 }
 
 // Função que devolve uma ocorrência baseado no ID da reserva
 async function getReservationById(reservationId) {
   try {
-      await connectDatabase();
-
       const query = 'SELECT * FROM reservas WHERE id = $1';
       const values = [reservationId];
       const result = await client.query(query, values);
@@ -112,16 +101,12 @@ async function getReservationById(reservationId) {
   } catch (error) {
       console.error('Erro ao obter reserva por ID:', error);
       throw error;
-  } finally {
-      await disconnectDatabase();
   }
 }
 
 // Função que devolve todas as ocorrências do banco de dados baseado no ID do espaço
 async function getReservationsBySpaceId(spaceId) {
   try {
-      await connectDatabase();
-
       const query = 'SELECT * FROM reservas WHERE id_espaco = $1';
       const values = [spaceId];
       const result = await client.query(query, values);
@@ -130,16 +115,12 @@ async function getReservationsBySpaceId(spaceId) {
   } catch (error) {
       console.error('Erro ao obter reservas por ID do espaço:', error);
       throw error;
-  } finally {
-      await disconnectDatabase();
   }
 }
 
 // Função que atualiza um registro no banco de dados
 async function updateReservationTime(reservationId, newTime) {
   try {
-      await connectDatabase();
-
       // Verificar se o novo horário atende às regras de negócio
       const newReservation = {
           inicio_da_reserva: newTime.inicio_da_reserva,
@@ -167,16 +148,12 @@ async function updateReservationTime(reservationId, newTime) {
   } catch (error) {
       console.error('Erro ao atualizar a reserva:', error);
       throw error;
-  } finally {
-      await disconnectDatabase();
   }
 }
 
 // Função pra deletar um registro do banco de dados
 async function cancelReservation(reservationId) {
   try {
-      await connectDatabase();
-
       const query = `
           DELETE FROM reservas
           WHERE id = $1
@@ -188,8 +165,6 @@ async function cancelReservation(reservationId) {
   } catch (error) {
       console.error('Erro ao cancelar a reserva:', error);
       throw error;
-  } finally {
-      await disconnectDatabase();
   }
 }
 
