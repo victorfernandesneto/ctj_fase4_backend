@@ -35,7 +35,7 @@ async function createTables() {
     await client.query(`
       CREATE TABLE IF NOT EXISTS espacos (
         id SERIAL PRIMARY KEY,
-        nome_do_espaco VARCHAR(255) NOT NULL,
+        nome_do_espaco VARCHAR(255) UNIQUE NOT NULL,
         capacidade INT NOT NULL
       )
     `);
@@ -76,6 +76,6 @@ async function insertInitialData() {
 // Chamar as funções para criar as tabelas e inserir os dados
 connectDatabase()
     .then(createTables)
-    .then(insertInitialData)
+    // .then(insertInitialData)
     .then(disconnectDatabase)
     .catch(error => console.error('Erro:', error));
