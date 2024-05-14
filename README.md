@@ -33,7 +33,7 @@
 ### Extras
 
 - [ ] Ajeitar padronização do nome de variáveis para inglês
-- [ ] Documentação em Swagger ou Insomnia ou Postman
+- [x] Documentação em Swagger
 - [ ] Testes
 
 ### Como instalar
